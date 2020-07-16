@@ -2,7 +2,7 @@
   "name": "hubot-jellyfish",
   "version": "1.0.0",
   "description": "",
-  "main": "src/sample.coffee",
+  "main": "src/sample.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
