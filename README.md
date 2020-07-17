@@ -56,9 +56,27 @@ export NPM_TOKEN=`cat ~/.npmrc | cut -d '=' -f 2`
     
     The easiest way to do this is to add a `.env` to your `myhubot` folder and specify the environment variables in that file.
 
+1. Use `npm link` to link to the `hubot` package in the `myhubot` project (otherise the local `node_modules/hubot` package is used and the adapter doesn't communicate with the same hubot as `myhubot` is using!)
+    ```
+    cd hubot-jellyfish
+    npm link ../myhubot/node_modules/hubot
+    ```
+
 1. Run Hubot!
     ```
     cd myhubot
-    bin/hubot -a jellyfish
+    bin/hubot -n hubot -a jellyfish
     ```
     
+### Testing
+
+To run the unit tests you have to unlink hubot from hubot-jellyfish:
+```
+cd hubot-jellyfish
+npm unlink ../myhubot/node_modules/hubot
+npm install
+```
+Then you can run the tests:
+```
+npm run test
+```

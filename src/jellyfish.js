@@ -19,7 +19,7 @@ const _ = require('lodash')
 const {
 	getSdk
 } = require('@balena/jellyfish-client-sdk')
-const environment = require('./environment')
+const env = require('./environment')
 
 const {
 	// eslint-disable-next-line no-unused-vars
@@ -61,6 +61,12 @@ const getJellyfishEvent = (eventType, target, strings) => {
 }
 
 class JellyfishAdapter extends Adapter {
+	constructor (robot, sdk, environment) {
+		super(robot)
+		this.sdk = sdk
+		this.environment = environment
+	}
+
 	async send (envelope, ...strings) {
 		try {
 			const target = await this.sdk.card.get(envelope.user.target)
@@ -100,11 +106,12 @@ class JellyfishAdapter extends Adapter {
 
 	async run () {
 		this.robot.logger.info('Running Jellyfish-Hubot adapter')
-		this.sdk = getSdk(environment.api)
 		try {
-			await this.sdk.auth.login(environment.login)
+			await this.sdk.auth.login(this.environment.login)
 			this.hubotUser = await this.sdk.auth.whoami()
-			this.robot.logger.info(`Logged in to Jellyfish as '${this.hubotUser.slug.replace(/^user-/, '')}'`)
+			this.robot.logger.info(
+				`Logged in to Jellyfish (${this.environment.api.apiUrl}) as '${this.hubotUser.slug.replace(/^user-/, '')}'`
+			)
 		} catch (error) {
 			this.robot.logger.error(`Could not login: ${error}`)
 			return
@@ -137,5 +144,9 @@ class JellyfishAdapter extends Adapter {
 }
 
 exports.use = (robot) => {
-	return new JellyfishAdapter(robot)
+	return new JellyfishAdapter(robot, getSdk(env.api), env)
+}
+
+exports.test = (robot, sdk, environment) => {
+	return new JellyfishAdapter(robot, sdk, environment)
 }
