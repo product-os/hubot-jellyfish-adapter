@@ -10,7 +10,9 @@
   "license": "UNLICENSED",
   "main": "src/jellyfish.js",
   "scripts": {
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "unit": "ava -v",
+    "test": "npm run lint && npm run unit"
   },
   "dependencies": {
     "@balena/jellyfish-client-sdk": "^1.1.1",
@@ -22,6 +24,7 @@
     "hubot": ">=2.0"
   },
   "devDependencies": {
+    "ava": "^3.10.1",
     "coffee-script": ">=1.2.0",
     "eslint": "^7.4.0",
     "eslint-config-standard": "^14.1.1",
@@ -31,6 +34,8 @@
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
-    "localenv": "^0.2.2"
+    "hubot": ">=2.0",
+    "localenv": "^0.2.2",
+    "sinon": "^9.0.2"
   }
 }

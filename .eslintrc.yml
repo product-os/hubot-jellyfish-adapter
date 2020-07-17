@@ -181,6 +181,7 @@ rules:
     - min: 2
       exceptions:
         - "_"
+        - "t"
   indent:
     - error
     - tab
