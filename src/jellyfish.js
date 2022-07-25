@@ -83,6 +83,19 @@ class JellyfishAdapter extends Adapter {
 	async receive (message) {
 		const actor = await this.sdk.card.get(message.data.actor)
 		const author = this.robot.brain.userForId(actor.id)
+		const sourceContract = await this.sdk.card.get(message.data.target)
+
+		// Don't support messages posted to support threads or sales threads
+		if (
+			message.type === 'message@1.0.0' &&
+      (sourceContract.type === 'support-thread@1.0.0' ||
+        sourceContract.type === 'sales-thread@1.0.0')
+		) {
+			this.robot.logger.info(
+				`Ignoring message ${message.id} because it came from an unsupported source: ${sourceContract.type}`
+			)
+			return
+		}
 
 		author.name = actor.slug.replace('user-', '')
 		author.target = message.data.target
@@ -93,7 +106,9 @@ class JellyfishAdapter extends Adapter {
 			message.id
 		)
 		this.robot.receive(msg)
-		this.sdk.card.markAsRead(this.hubotUser.slug, message)
+		setTimeout(() => {
+			this.sdk.card.markAsRead(this.hubotUser.slug, message)
+		}, 500)
 	}
 
 	emote (envelope, ...strings) {
