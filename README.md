@@ -39,8 +39,7 @@ A Jellyfish adapter for [Hubot](https://hubot.github.com/)
     The following environment variables must be defined before running hubot locally:
     
     * `HUBOT_JELLYFISH_API_URL` (e.g. `http://localhost:8000` for local development)
-    * `HUBOT_JELLYFISH_LOGIN_USER`
-    * `HUBOT_JELLYFISH_LOGIN_PASSWORD`
+    * `HUBOT_JELLYFISH_TOKEN` (An api token for authenticating with Jellyfish)
     
     The easiest way to do this is to add a `.env` to your `myhubot` folder and specify the environment variables in that file.
 
