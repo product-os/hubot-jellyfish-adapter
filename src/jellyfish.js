@@ -22,8 +22,10 @@ const {
 const env = require('./environment')
 
 const {
+	Adapter,
 	// eslint-disable-next-line no-unused-vars
-	Adapter, Robot, TextMessage
+	Robot,
+	TextMessage
 } = hubot
 
 const getStreamSchema = (hubotUserId) => {
@@ -70,30 +72,46 @@ class JellyfishAdapter extends Adapter {
 	async send (envelope, ...strings) {
 		try {
 			const target = await this.sdk.card.get(envelope.user.target)
-			await this.sdk.event.create(getJellyfishEvent(envelope.user.eventType, target, strings))
+			await this.sdk.event.create(
+				getJellyfishEvent(envelope.user.eventType, target, strings)
+			)
 		} catch (error) {
 			this.robot.logger.error(`Jellyfish adapter send error: ${error}`)
 		}
 	}
 
-	receive (message) {
-		const author = this.robot.brain.userForId(message.data.actor)
+	async receive (message) {
+		const actor = await this.sdk.card.get(message.data.actor)
+		const author = this.robot.brain.userForId(actor.id)
+
+		author.name = actor.slug.replace('user-', '')
 		author.target = message.data.target
 		author.eventType = message.type
-		const msg = new TextMessage(author, message.data.payload.message, message.id)
+		const msg = new TextMessage(
+			author,
+			message.data.payload.message,
+			message.id
+		)
 		this.robot.receive(msg)
+		this.sdk.card.markAsRead(this.hubotUser.slug, message)
 	}
 
 	emote (envelope, ...strings) {
-		this.send(envelope, ...strings.map((str) => {
-			return `*${str}*`
-		}))
+		this.send(
+			envelope,
+			...strings.map((str) => {
+				return `*${str}*`
+			})
+		)
 	}
 
 	reply (envelope, ...strings) {
-		this.send(envelope, ...strings.map((str) => {
-			return `${envelope.user.name}: ${str}`
-		}))
+		this.send(
+			envelope,
+			...strings.map((str) => {
+				return `${envelope.user.name}: ${str}`
+			})
+		)
 	}
 
 	close () {
@@ -110,7 +128,9 @@ class JellyfishAdapter extends Adapter {
 			await this.sdk.auth.login(this.environment.login)
 			this.hubotUser = await this.sdk.auth.whoami()
 			this.robot.logger.info(
-				`Logged in to Jellyfish (${this.environment.api.apiUrl}) as '${this.hubotUser.slug.replace(/^user-/, '')}'`
+				`Logged in to Jellyfish (${
+					this.environment.api.apiUrl
+				}) as '${this.hubotUser.slug.replace(/^user-/, '')}'`
 			)
 		} catch (error) {
 			this.robot.logger.error(`Could not login: ${error}`)
