@@ -5,6 +5,11 @@
 * Switch to Dependabot Preview [Josh Bowling]
 * test: Add unit tests [Graham McCulloch]
 
+# v2.0.1
+## (2022-07-25)
+
+* Don't respond to messages posted to support threads or sales threads [Lucian Buzzo]
+
 # v2.0.0
 ## (2022-07-25)
 

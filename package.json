@@ -1,6 +1,6 @@
 {
   "name": "@balena/hubot-jellyfish",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A Jellyfish adapter for Hubot",
   "repository": {
     "type": "git",
@@ -39,6 +39,6 @@
     "sinon": "^9.0.2"
   },
   "versionist": {
-    "publishedAt": "2022-07-25T14:54:46.565Z"
+    "publishedAt": "2022-07-25T16:28:00.930Z"
   }
 }
