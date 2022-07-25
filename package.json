@@ -15,7 +15,7 @@
     "test": "npm run lint && npm run unit"
   },
   "dependencies": {
-    "@balena/jellyfish-client-sdk": "^1.1.1",
+    "@balena/jellyfish-client-sdk": "^13.0.3",
     "lodash": "^4.17.19",
     "parent-require": "^1.0.0",
     "uuid": "^8.2.0"
