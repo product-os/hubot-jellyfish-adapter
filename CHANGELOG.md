@@ -5,6 +5,12 @@
 * Switch to Dependabot Preview [Josh Bowling]
 * test: Add unit tests [Graham McCulloch]
 
+# v2.0.0
+## (2022-07-25)
+
+* Use API token instead of username/password for auth [Lucian Buzzo]
+* Improve handling of incoming messages [Lucian Buzzo]
+
 # v1.0.0
 ## (2022-07-25)
 
