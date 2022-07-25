@@ -4,18 +4,6 @@ A Jellyfish adapter for [Hubot](https://hubot.github.com/)
 
 ## Developing
 
-### Getting private package access
-
-In order to develop hubot-jellyfish, you must have an [npmjs](https://npmjs.com) account
-that has read access to the private Jellyfish packages. Provide your npmjs account
-information with ops and request access. Once access has been granted, you will now
-be able to build and run Jellyfish by setting the `NPM_TOKEN` environment variable:
-
-```sh
-npm login
-export NPM_TOKEN=`cat ~/.npmrc | cut -d '=' -f 2`
-```
-
 ### Setup
 1. Clone this repo and install the npm dependencies:
     ```
