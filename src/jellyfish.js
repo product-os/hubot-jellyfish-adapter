@@ -125,7 +125,8 @@ class JellyfishAdapter extends Adapter {
 	async run () {
 		this.robot.logger.info('Running Jellyfish-Hubot adapter')
 		try {
-			await this.sdk.auth.login(this.environment.login)
+			await this.sdk.auth.loginWithToken(this.environment.token)
+
 			this.hubotUser = await this.sdk.auth.whoami()
 			this.robot.logger.info(
 				`Logged in to Jellyfish (${

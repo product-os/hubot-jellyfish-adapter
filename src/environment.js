@@ -6,10 +6,7 @@
 
 /* eslint-disable no-process-env */
 
-exports.login = {
-	username: process.env.HUBOT_JELLYFISH_LOGIN_USER,
-	password: process.env.HUBOT_JELLYFISH_LOGIN_PASSWORD
-}
+exports.token = process.env.HUBOT_JELLYFISH_TOKEN
 
 exports.api = {
 	apiUrl: process.env.HUBOT_JELLYFISH_API_URL,
