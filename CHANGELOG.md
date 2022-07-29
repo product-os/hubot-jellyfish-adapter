@@ -5,6 +5,11 @@
 * Switch to Dependabot Preview [Josh Bowling]
 * test: Add unit tests [Graham McCulloch]
 
+# v2.0.2
+## (2022-07-29)
+
+* Always send whispers [Josh Bowling]
+
 # v2.0.1
 ## (2022-07-25)
 
