@@ -51,11 +51,11 @@ const getStreamSchema = (hubotUserId) => {
 	}
 }
 
-const getJellyfishEvent = (eventType, target, strings) => {
+const getJellyfishEvent = (target, strings) => {
 	return {
-		type: eventType.split('@')[0],
+		type: 'whisper',
 		target,
-		slug: `message-${uuid()}`,
+		slug: `whisper-${uuid()}`,
 		payload: {
 			message: strings.join('\n')
 		}
@@ -73,7 +73,7 @@ class JellyfishAdapter extends Adapter {
 		try {
 			const target = await this.sdk.card.get(envelope.user.target)
 			await this.sdk.event.create(
-				getJellyfishEvent(envelope.user.eventType, target, strings)
+				getJellyfishEvent(target, strings)
 			)
 		} catch (error) {
 			this.robot.logger.error(`Jellyfish adapter send error: ${error}`)
