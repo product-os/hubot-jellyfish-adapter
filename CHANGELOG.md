@@ -5,6 +5,11 @@
 * Switch to Dependabot Preview [Josh Bowling]
 * test: Add unit tests [Graham McCulloch]
 
+# v2.0.3
+## (2022-08-16)
+
+* Update and prune deps [Josh Bowling]
+
 # v2.0.2
 ## (2022-07-29)
 
