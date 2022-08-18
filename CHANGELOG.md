@@ -5,6 +5,11 @@
 * Switch to Dependabot Preview [Josh Bowling]
 * test: Add unit tests [Graham McCulloch]
 
+# v3.0.0
+## (2022-08-18)
+
+* Convert to TypeScript [Josh Bowling]
+
 # v2.0.3
 ## (2022-08-16)
 
