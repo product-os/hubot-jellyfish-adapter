@@ -1,24 +1,12 @@
-/*
- * Copyright (C) Balena.io - All Rights Reserved
- * Unauthorized copying of this file, via any medium is strictly prohibited.
- * Proprietary and confidential.
- */
+import { getSdk, JellyfishSDK } from '@balena/jellyfish-client-sdk';
+import { strict as assert } from 'assert';
+import type { Contract } from 'autumndb';
+import { Adapter, Envelope, Robot, TextMessage } from 'hubot';
+import _ from 'lodash';
+import { v4 as uuid } from 'uuid';
+import * as env from './environment';
 
-let hubot = null;
-try {
-	hubot = require('hubot/es2015');
-} catch (error) {
-	const prequire = require('parent-require');
-	hubot = prequire('hubot/es2015');
-}
-const { v4: uuid } = require('uuid');
-const _ = require('lodash');
-const { getSdk } = require('@balena/jellyfish-client-sdk');
-const env = require('./environment');
-
-const { Adapter, TextMessage } = hubot;
-
-const getStreamSchema = (hubotUserId) => {
+const getStreamSchema = (hubotUserId: string) => {
 	return {
 		type: 'object',
 		required: ['type', 'data'],
@@ -41,7 +29,7 @@ const getStreamSchema = (hubotUserId) => {
 	};
 };
 
-const getJellyfishEvent = (target, strings) => {
+const getJellyfishEvent = (target: Contract, strings: string[]) => {
 	return {
 		type: 'whisper',
 		target,
@@ -53,25 +41,44 @@ const getJellyfishEvent = (target, strings) => {
 };
 
 class JellyfishAdapter extends Adapter {
-	constructor(robot, sdk, environment) {
+	robot: Robot;
+	sdk: JellyfishSDK;
+	environment: any;
+	hubotUser: any;
+	stream: any;
+
+	constructor(robot: Robot, sdk: JellyfishSDK, environment) {
 		super(robot);
+		this.robot = robot;
 		this.sdk = sdk;
 		this.environment = environment;
 	}
 
-	async send(envelope, ...strings) {
+	async send(envelope: Envelope, ...strings: string[]) {
 		try {
-			const target = await this.sdk.card.get(envelope.user.target);
+			const target = await this.sdk.card.get(envelope.user.target as string);
+			assert(
+				target,
+				new Error(`Unable to get target contract: ${envelope.user.target}`),
+			);
 			await this.sdk.event.create(getJellyfishEvent(target, strings));
 		} catch (error) {
 			this.robot.logger.error(`Jellyfish adapter send error: ${error}`);
 		}
 	}
 
-	async receive(message) {
+	async receive(message: any) {
 		const actor = await this.sdk.card.get(message.data.actor);
+		assert(
+			actor,
+			new Error(`Unable to get actor contract: ${message.data.actor}`),
+		);
 		const author = this.robot.brain.userForId(actor.id);
 		const sourceContract = await this.sdk.card.get(message.data.target);
+		assert(
+			sourceContract,
+			`Unable to get source contract: ${message.data.target}`,
+		);
 
 		// Don't support messages posted to support threads or sales threads
 		if (
@@ -90,7 +97,7 @@ class JellyfishAdapter extends Adapter {
 		author.eventType = message.type;
 		const msg = new TextMessage(
 			author,
-			message.data.payload.message,
+			(message.data.payload as any).message,
 			message.id,
 		);
 		this.robot.receive(msg);
@@ -99,7 +106,7 @@ class JellyfishAdapter extends Adapter {
 		}, 500);
 	}
 
-	emote(envelope, ...strings) {
+	emote(envelope: Envelope, ...strings: string[]) {
 		this.send(
 			envelope,
 			...strings.map((str) => {
@@ -108,7 +115,7 @@ class JellyfishAdapter extends Adapter {
 		);
 	}
 
-	reply(envelope, ...strings) {
+	reply(envelope: Envelope, ...strings: string[]) {
 		this.send(
 			envelope,
 			...strings.map((str) => {
@@ -154,23 +161,23 @@ class JellyfishAdapter extends Adapter {
 			this.stream.close();
 		}
 		this.stream = await this.sdk.stream(streamSchema);
-		this.stream.on('update', async (update) => {
+		this.stream.on('update', async (update: any) => {
 			if (update.error) {
 				this.robot.logger.error(`Stream update error: ${update.error}`);
 			} else if (_.get(update, ['data', 'type']) === 'insert') {
 				this.receive(update.data.after);
 			}
 		});
-		this.stream.on('error', (error) => {
+		this.stream.on('error', (error: any) => {
 			this.robot.logger.error(`Stream error: ${error}`);
 		});
 	}
 }
 
-exports.use = (robot) => {
+export const use = (robot: Robot) => {
 	return new JellyfishAdapter(robot, getSdk(env.api), env);
 };
 
-exports.test = (robot, sdk, environment) => {
+export const test = (robot: Robot, sdk: any, environment: any) => {
 	return new JellyfishAdapter(robot, sdk, environment);
 };

@@ -8,14 +8,25 @@
   },
   "author": "Balena.io. <hello@balena.io>",
   "license": "UNLICENSED",
-  "main": "src/jellyfish.js",
+  "main": "src/index.js",
+  "types": "src/index.d.ts",
+  "files": [
+    "src/"
+  ],
+  "directories": {
+    "lib": "lib"
+  },
   "scripts": {
+    "clean": "rimraf src",
+    "build": "npm run clean && tsc -p tsconfig.build.json",
     "lint": "balena-lint src && deplint",
     "lint:fix": "balena-lint --fix src",
-    "test": "npm run lint"
+    "test": "npm run lint",
+    "prepack": "npm run build"
   },
   "dependencies": {
     "@balena/jellyfish-client-sdk": "^13.0.30",
+    "@humanwhocodes/env": "^2.2.2",
     "lodash": "^4.17.21",
     "parent-require": "^1.0.0",
     "uuid": "^8.3.2"
@@ -25,10 +36,16 @@
   },
   "devDependencies": {
     "@balena/lint": "^6.2.0",
+    "@types/hubot": "^3.3.1",
+    "@types/lodash": "^4.14.183",
+    "@types/uuid": "^8.3.4",
+    "autumndb": "^22.1.14",
     "deplint": "^1.1.3",
-    "hubot": ">=2.0",
+    "hubot": "^3.3.2",
     "lint-staged": "^13.0.3",
-    "simple-git-hooks": "^2.8.0"
+    "rimraf": "^3.0.2",
+    "simple-git-hooks": "^2.8.0",
+    "typescript": "^4.7.4"
   },
   "deplint": {
     "files": [
@@ -42,7 +59,7 @@
     "pre-commit": "npx lint-staged"
   },
   "lint-staged": {
-    "*.js": [
+    "*.ts": [
       "balena-lint --fix"
     ]
   },
